@@ -27,7 +27,6 @@ T = Matrix(
 
 
 def prob_teste():
-    # Fórmula -> (P ** k) * P.col(j)
     y = []
     for j in range(0, 4):
         ej = Matrix([[0], [0], [0], [0], [0]])
@@ -36,16 +35,16 @@ def prob_teste():
 
         y.append(a.evalf(2))
 
-        print(f"Testanto coluna {j + 1} \n")
+        print(f"Testando coluna {j + 1} \n")
         pprint([a.evalf(2), ej])
 
 
-def infinite_Diagonal(matrix):
-    for k in range(1, 100, 10):
-        print(f"Limite de k -> +oo | k = {k}: \n")
-        pprint((matrix**k).evalf(2))
-        pprint(limit(matrix, k, oo, "+"))
-        print("\n")
+def probability_to_find_cheese(k):
+    P, D = T.diagonalize()
+
+    P_k = P * (D**k) * (P**-1)
+
+    return P_k.evalf(2)
 
 
 def main():
@@ -56,15 +55,22 @@ def main():
 
     prob_teste()
 
-    M, D = T.diagonalize()
-    Diag = (D).evalf(2)
-
-    print("\n T diagonalizada: \n")
-    pprint(Tfrac)
+    k = 1000
+    print("\n")
+    print(f"Matriz resposta de C com k = {k}: \n")
+    pprint(probability_to_find_cheese(k))
     print("\n")
 
-    infinite_Diagonal(T)
+    print(
+        """
+    Considerações finais:
+            a) A posição P55 de T é igual a 1 pois o rato já está na sala e não sairá de lá, por este mesmo motivo Pi5 = 0 pois o rato uma vez chegando a sala 5 não sairá mais de lá.
 
+            b) A maior probabilidade é j = 3 e a menor é j = 1, era o esperado pois com a disposição das salas a chance em j = 3 é muito maior, já j = 2 ou 4 é a mesma e por ser mais distante, j = 1 é a menor(Fórmula usada: T**10 * ej).
+
+            c) Como demonstrado pela matriz apresentada na letra "C", conforme k tende ao infinito, a probabilidade do rato chegar à quinta sala e achar o queijo converge a 1 (caso desejável, pode-se trocar o valor para mostrar diferentes resultados, Fórmula usada: T^k = P * D**k * P**-1).
+          """
+    )
     if input():
         exit()
 
